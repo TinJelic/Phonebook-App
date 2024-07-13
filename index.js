@@ -57,10 +57,15 @@ app.get('/api/persons', (request, response) =>{
     response.json(persons)
 })
 
-app.get('/api/persons/:id', (request, response) =>{
+app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  person = persons.find(element => element.id === id)
-  response.json(person)
+  const person = persons.find(element => element.id === id)
+  if (person) {
+    response.json(person)
+  } else {
+    console.log('x')
+    response.status(404).end()
+  }
 })
 
 const getID = () => {
