@@ -1,6 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 
+
+
 const app = express()
 
 app.use(express.json())
@@ -35,6 +37,8 @@ let persons = [
     "number": "39-23-6423122"
   }
 ]
+
+app.use(express.static('dist'))
 
 const cors = require('cors')
 
