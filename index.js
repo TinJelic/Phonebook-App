@@ -57,6 +57,12 @@ app.get('/api/persons', (request, response) =>{
     response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) =>{
+  const id = request.params.id
+  persons = persons.find(element => element.id === id)
+  response.json(persons)
+})
+
 const getID = () => {
   const maxId = Math.max(...persons.map(osoba => Number(osoba.id))) + 1
   return maxId.toString()
