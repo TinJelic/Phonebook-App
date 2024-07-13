@@ -58,7 +58,7 @@ app.get('/api/persons', (request, response) =>{
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
+  const id = request.params.id
   const person = persons.find(element => element.id === id)
   if (person) {
     response.json(person)
