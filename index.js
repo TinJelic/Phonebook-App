@@ -58,9 +58,9 @@ app.get('/api/persons', (request, response) =>{
 })
 
 app.get('/api/persons/:id', (request, response) =>{
-  const id = request.params.id
-  persons = persons.find(element => element.id === id)
-  response.json(persons)
+  const id = Number(request.params.id)
+  person = persons.find(element => element.id === id)
+  response.json(person)
 })
 
 const getID = () => {
