@@ -1,7 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
+require('dotenv').config()
 
 
+const Person = require('./models/Person')
 
 const app = express()
 
@@ -15,28 +17,6 @@ morgan.token('body', (req) => {
 // Use morgan with a custom format that includes the request body
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-let persons = [
-  { 
-    "id": "1",
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": "2",
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": "3",
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": "4",
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-]
 
 app.use(express.static('dist'))
 
@@ -44,28 +24,26 @@ const cors = require('cors')
 
 app.use(cors())
 
-const numberOfPersons = () => persons.length
+/*const numberOfPersons = () => persons.length
 
 app.get('/info', (request, response) => {
   const broj = numberOfPersons()
   const requestTime = new Date().toLocaleString()
 
   response.send(`<p>Phonebook has value of ${broj}</p><p>Request received at: ${requestTime}</p>`)
-})
+})*/
 
 app.get('/api/persons', (request, response) =>{
-    response.json(persons)
+  Person.find({}).then(osoba => {
+    response.json(osoba)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(element => element.id === id)
-  if (person) {
-    response.json(person)
-  } else {
-    console.log('x')
-    response.status(404).end()
-  }
+
+  Person.findById(request.params.id).then(osoba =>
+    response.json(osoba)
+  )
 })
 
 const getID = () => {
@@ -76,35 +54,21 @@ const getID = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  console.log('Request Body:', body)
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name or number missing' 
-    })
+  if (body.content === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  const found = persons.find((element) => element.name.toLowerCase() === body.name.toLowerCase())
-
-  if (found) {
-    return response.status(400).json({ 
-      error: 'name already exists' 
-    })
-  }
-
-  const id = getID()
-  console.log("Id", id)
-
-  const person = {
-    id: id,
+  const person = new Person({
     name: body.name,
-    number: body.number
-  }
+    number: body.number,
+  })
 
-  persons = persons.concat(person)
-
-  return response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
+
+
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
@@ -113,7 +77,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
