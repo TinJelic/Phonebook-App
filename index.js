@@ -54,18 +54,24 @@ const getID = () => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  if (body.content === undefined) {
-    return response.status(400).json({ error: 'content missing' })
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'name missing' })
+  }
+  else if (body.number === undefined){
+    return response.status(400).json({ error: 'number missing' })
+
+  }
+  else {
+    const person = new Person({
+      name: body.name,
+      number: body.number,
+    })
+  
+    person.save().then(savedPerson => {
+      response.json(savedPerson)
+    })
   }
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  })
-
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
-  })
 })
 
 
