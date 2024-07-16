@@ -3,7 +3,7 @@ const morgan = require('morgan')
 require('dotenv').config()
 
 
-const Person = require('./models/Person')
+const Person = require('./models/person')
 
 const app = express()
 
