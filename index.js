@@ -20,18 +20,18 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 // Routes
 
 app.get('/info', (request, response) => {
-  const datetime = new Date();
+  const datetime = new Date()
 
   Person.countDocuments()
     .then(count => {
-      console.log(`Number of persons: ${count}`);
-      response.send(`<p>Phonebook has info for ${count} people</p><p>${datetime}</p>`);
+      console.log(`Number of persons: ${count}`)
+      response.send(`<p>Phonebook has info for ${count} people</p><p>${datetime}</p>`)
     })
     .catch(error => {
-      console.error('Error counting documents:', error.message);
-      response.status(500).send({ error: 'Failed to count documents' });
-    });
-});
+      console.error('Error counting documents:', error.message)
+      response.status(500).send({ error: 'Failed to count documents' })
+    })
+})
 
 
 app.get('/api/persons', (request, response) => {
